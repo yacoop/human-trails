@@ -2,8 +2,8 @@
 #include <cmath>
 #include <ctime>
 
-#define agents_count 500
-#define dests_count 3
+#define agents_count 5000
+#define dests_count 10
 
 class Agent: public sf::CircleShape{
     private:
@@ -49,6 +49,27 @@ class Agent: public sf::CircleShape{
 
 };
 
+Agent* agentsInit(const sf::RenderWindow &App){
+    static Agent agents[agents_count];
+    for(int i = 0; i < agents_count; i++)
+    {
+        agents[i] = Agent(rand() % (int)(App.getSize().x - 2 * agents[i].getRadius()), rand() % (int)(App.getSize().y - 2 * agents[i].getRadius()),
+                        rand() % dests_count, 3, rand() % 360);
+    }
+    return agents;
+};
+
+sf::CircleShape* destsInit(const sf::RenderWindow &App){
+    static sf::CircleShape dests[dests_count];
+    for(int i = 0; i < dests_count; i++)
+    {
+        dests[i] = sf::CircleShape(4);
+        dests[i].setFillColor(sf::Color::Green);
+        dests[i].setPosition(App.getSize().x/2 +250*cos(2*M_PI*i/dests_count-M_PI/2), App.getSize().y/2 +250*sin(2*M_PI*i/dests_count-M_PI/2));
+    }
+    return dests;
+};
+
 class Destination: public sf::CircleShape{
     //TODO
 };
@@ -60,20 +81,11 @@ int main()
 
     srand((unsigned)time(0));
 
-    Agent agents[agents_count];
-    for(int i = 0; i < agents_count; i++)
-    {
-        agents[i] = Agent(rand() % (int)(App.getSize().x - 2 * agents[i].getRadius()), rand() % (int)(App.getSize().y - 2 * agents[i].getRadius()),
-                        rand() % dests_count, 3, rand() % 360);
-    }
+    Agent* agents;
+    agents = agentsInit(App);
 
-    sf::CircleShape dests[dests_count];
-    for(int i = 0; i < dests_count; i++)
-    {
-        dests[i] = sf::CircleShape(4);
-        dests[i].setFillColor(sf::Color::Green);
-        dests[i].setPosition(App.getSize().x/2 +250*cos(2*M_PI*i/dests_count+M_PI/2), App.getSize().y/2 +250*sin(2*M_PI*i/dests_count+M_PI/2));
-    }
+    sf::CircleShape* dests;
+    dests = destsInit(App);
 
     while (App.isOpen())
     {
@@ -105,12 +117,6 @@ int main()
 
             // agent movement
             agents[i].move(agents[i].getSpeed() * cos(agents[i].getAngle()), agents[i].getSpeed() * sin(agents[i].getAngle()));
-
-            // // agent collision with window borders
-            // if (agents[i].getPosition().x + 2 * agents[i].getRadius() >= App.getSize().x || agents[i].getPosition().x <= 0)
-            //     agents[i].setAngle(M_PI - agents[i].getAngle());
-            // if (agents[i].getPosition().y + 2 * agents[i].getRadius() >= App.getSize().y || agents[i].getPosition().y <= 0)
-            //     agents[i].setAngle(-agents[i].getAngle());
         }
         App.clear();
         for(int i = 0; i < agents_count; i++)
