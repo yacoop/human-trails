@@ -1,4 +1,6 @@
 #include "agent.hpp"
+#include "map.hpp"
+
 
 int main()
 {
@@ -6,7 +8,7 @@ int main()
     srand((unsigned)time(0));
     
     // init window
-    sf::RenderWindow App(sf::VideoMode(800, 600), "Prosta animacja");
+    sf::RenderWindow App(sf::VideoMode(800, 800), "Prosta animacja");
     App.setFramerateLimit(60);
 
     // init agents and destinations
@@ -15,6 +17,10 @@ int main()
 
     sf::CircleShape* dests;
     dests = destsInit(App);
+
+    // init map
+    Tile ** map;
+    map = mapInit(App);
 
     // main loop
     while (App.isOpen())
@@ -26,11 +32,23 @@ int main()
                 App.close();
         }
 
-        //manage agents movememt and destination
-        manageAgents(agents, dests);
+        App.clear();
+
+        // draw map
+        drawMap(App, map);
+
+        //manage grass growth
+        growGrass(map);
+
+        stompGrass(map, agents);
+
+        // manage agents movememt and destination
+        manageAgents(agents, map, dests);
 
         //draw objects (agents and destinations)
         drawObjects(App, agents, dests);
+
+        App.display();
     }
 
     return 0;
