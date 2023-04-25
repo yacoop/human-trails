@@ -2,25 +2,37 @@
 #include "map.hpp"
 
 
+
 int main()
 {
     // init random seed
     srand((unsigned)time(0));
     
     // init window
-    sf::RenderWindow App(sf::VideoMode(800, 800), "Prosta animacja");
+    sf::RenderWindow App(sf::VideoMode(window_width, window_height), "human-trails");
     App.setFramerateLimit(60);
 
     // init agents and destinations
     Agent* agents;
-    agents = agentsInit(App);
+    agents = agentsInit();
 
     sf::CircleShape* dests;
-    dests = destsInit(App);
+    dests = destsInit();
 
     // init map
     Tile ** map;
-    map = mapInit(App);
+    map = mapInit();
+
+    // sf::CircleShape** circle = new sf::CircleShape*[map_width];
+    // for(int i = 0; i < map_width; i++)
+    // {
+    //     circle[i] = new sf::CircleShape[map_height];
+    //     for(int j = 0; j < map_height; j++)
+    //     {
+    //         circle[i][j] = sf::CircleShape(2);
+    //         circle[i][j].setPosition(map[i][j].getCenterPosition() - sf::Vector2f(2,2));
+    //     }
+    // }
 
     // main loop
     while (App.isOpen())
@@ -34,9 +46,11 @@ int main()
 
         App.clear();
 
+
+
         // draw map
         drawMap(App, map);
-
+        
         //manage grass growth
         growGrass(map);
 

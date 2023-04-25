@@ -33,6 +33,10 @@
         "type_traits": "cpp",
         "tuple": "cpp",
         "typeinfo": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "iostream": "cpp",
+        "bit": "cpp",
+        "cstddef": "cpp",
+        "istream": "cpp"
     }
 }
