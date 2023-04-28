@@ -1,8 +1,6 @@
 #include "agent.hpp"
 #include "map.hpp"
 
-
-
 int main()
 {
     // init random seed

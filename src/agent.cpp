@@ -126,7 +126,7 @@ void Agent::setNearestTiles(Tile** map, Dest* dests)
             if(map[j][k].getFillColor() == Grey && distance(getCenterPosition(), map[j][k].getCenterPosition()) < 10*tile_height && distance(getCenterPosition(),dests[getDestination()].getCenterPosition()) > distance(map[j][k].getCenterPosition(), dests[getDestination()].getCenterPosition()))
             {
                 nearest_tiles.push_back(map[j][k]);
-                map[j][k].setFillColor(sf::Color::Blue);
+                // map[j][k].setFillColor(sf::Color::Blue); // to color nearest tiles
             }
         }
     }

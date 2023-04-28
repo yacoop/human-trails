@@ -1,7 +1,5 @@
 #include "map.hpp"
 
-// const sf::Color Grey = sf::Color(128, 128, 128);
-
 Tile::Tile(float x = 0, float y = 0, float grass_height = 0){
     RectangleShape();
     setSize(sf::Vector2f(tile_width, tile_height));
