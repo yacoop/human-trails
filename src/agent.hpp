@@ -8,8 +8,7 @@
 #include <ctime>
 #include <vector>
 
-#define agents_count 20
-
+#define agents_count 50
 
 class Agent: public sf::CircleShape{
     private:
