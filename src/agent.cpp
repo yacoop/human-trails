@@ -13,6 +13,18 @@ Agent::Agent(float x = 0, float y = 0, int dest = 0, float speed = 0.1, float an
     this->destination = dest;
 }
 
+sf::Vector2f Agent::getCenterPosition(){
+    return getPosition()+sf::Vector2f(getRadius(), getRadius());
+}
+
+Tile* Agent::getTile(Tile** map){
+    int x, y;
+    x = (int)getCenterPosition().x/tile_width;
+    y = (int)getCenterPosition().y/tile_height;
+    return &map[x][y];
+}
+
+
 float Agent::getSpeed(){
     return speed;
 }
@@ -40,28 +52,40 @@ void Agent::moveAgent()
     move(getSpeed() * cos(getAngle()), getSpeed() * sin(getAngle()));
 }
 
-void Agent::setDirection(sf::CircleShape* dests)
+void Agent::setDirection(Dest* dests)
 {
-    if(nearest_tiles.size() == 0)
+    double dy, dx;
+    sf::Vector2f destCPos;
+    
+    if(nearest_tiles.size() < 2)
     {
-        if(getPosition().x >= dests[getDestination()].getPosition().x)
-            setAngle(atan((getPosition().y - dests[getDestination()].getPosition().y)/(getPosition().x - dests[getDestination()].getPosition().x)) + M_PI);
+        destCPos = dests[getDestination()].getCenterPosition();
+        dy = getCenterPosition().y - destCPos.y;
+        dx = getCenterPosition().x - destCPos.x;
+        if(getCenterPosition().x >= destCPos.x)           
+            setAngle(atan(dy/dx)+ M_PI);
+ 
         else
-            setAngle(atan((getPosition().y - dests[getDestination()].getPosition().y)/(getPosition().x - dests[getDestination()].getPosition().x)));
+            setAngle(atan(dy/dx));
     }
     else
     {
         int i = rand() % nearest_tiles.size();
-        if(getPosition().x >= nearest_tiles[i].getPosition().x)
-            setAngle(atan((getPosition().y - nearest_tiles[i].getPosition().y)/(getPosition().x - nearest_tiles[i].getPosition().x)) + M_PI);
+
+        destCPos = nearest_tiles[i].getCenterPosition();
+        dy = getCenterPosition().y - nearest_tiles[i].getCenterPosition().y;
+        dx = getCenterPosition().x - nearest_tiles[i].getCenterPosition().x;
+
+        if(getCenterPosition().x >= destCPos.x)
+            setAngle(atan(dy/dx) + M_PI);
         else
-            setAngle(atan((getPosition().y - nearest_tiles[i].getPosition().y)/(getPosition().x - nearest_tiles[i].getPosition().x)));
+            setAngle(atan(dy/dx));
     }
 }
 
-void Agent::changeDest(sf::CircleShape* dests) 
+void Agent::changeDest(Dest* dests) 
 {
-    if(sqrt(pow(getPosition().x - dests[getDestination()].getPosition().x, 2) + pow(getPosition().y - dests[getDestination()].getPosition().y, 2)) < 10)
+    if(sqrt(pow(getCenterPosition().x - dests[getDestination()].getCenterPosition().x, 2) + pow(getCenterPosition().y - dests[getDestination()].getCenterPosition().y, 2)) < getSpeed())
     {
         int rand_dest;
         do{
@@ -71,14 +95,16 @@ void Agent::changeDest(sf::CircleShape* dests)
     }
 }
 
-void Agent::setNearestTiles(Tile** map, sf::CircleShape* dests)
+void Agent::setNearestTiles(Tile** map, Dest* dests)
 {
     nearest_tiles.clear();
 
-    int x = (int)(getPosition().x/tile_width);
-    int y = (int)(getPosition().y/tile_height);
+    // jako funkcja?
+    int x = (int)(getCenterPosition().x/tile_width);
+    int y = (int)(getCenterPosition().y/tile_height);
     int x_min, x_max, y_min, y_max;
 
+    //setting iteration range
     if(x < 10) x_min = 0;
     else x_min = x-10;
 
@@ -96,8 +122,8 @@ void Agent::setNearestTiles(Tile** map, sf::CircleShape* dests)
     {
         for(int k = y_min; k < y_max; k++)
         {
-
-            if(map[j][k].getFillColor() == Grey && distance(getPosition(), map[j][k].getCenterPosition()) < 10*tile_height && distance(getPosition(),dests[getDestination()].getPosition()) > distance(map[j][k].getCenterPosition(), dests[getDestination()].getPosition()))
+            //jakos ladniej zapisac
+            if(map[j][k].getFillColor() == Grey && distance(getCenterPosition(), map[j][k].getCenterPosition()) < 10*tile_height && distance(getCenterPosition(),dests[getDestination()].getCenterPosition()) > distance(map[j][k].getCenterPosition(), dests[getDestination()].getCenterPosition()))
             {
                 nearest_tiles.push_back(map[j][k]);
                 map[j][k].setFillColor(sf::Color::Blue);
@@ -113,49 +139,28 @@ Agent* agentsInit(){
         agents[i] = Agent(rand() % (int)(window_width - 2 * agents[i].getRadius()), rand() % (int)(window_height - 2 * agents[i].getRadius()),
                         rand() % dests_count, 3, rand() % 360);
     }
-    // agents[0] = Agent(800, 400, 2, 3, 30);
     return agents;
 }
 
-sf::CircleShape* destsInit(){
-    static sf::CircleShape dests[dests_count];
-    for(int i = 0; i < dests_count; i++)
-    {
-        dests[i] = sf::CircleShape(4);
-        dests[i].setFillColor(sf::Color::Blue);
-        dests[i].setPosition(window_width/2 +250*cos(2*M_PI*i/dests_count-M_PI/2), window_height/2 +250*sin(2*M_PI*i/dests_count-M_PI/2));
-    }
-    return dests;
-}
 
-void stompGrass(Tile** map, Agent* agents){
+void manageAgents(Agent* agents, Tile** map, Dest* dests)
+{
     int x, y;
     for(int i = 0; i < agents_count; i++)
     {
-        x = (int)agents[i].getPosition().x/map[0][0].getSize().x;
-        y = (int)agents[i].getPosition().y/map[0][0].getSize().y;
-        // std::cout << x << " " << agents[0].getPosition().x << std::endl;
-        map[x][y].stomp();
-    }
-    // std::cout << std::endl;
-}
-
-void manageAgents(Agent* agents, Tile** map, sf::CircleShape* dests)
-{
-    for(int i = 0; i < agents_count; i++)
-    {
+        agents[i].getTile(map)->stomp();
         //setting nearest tiles
         agents[i].setNearestTiles(map, dests);
-        // //setting destination
+        //setting destination
         agents[i].setDirection(dests);
-        // //destination reached
+        // destination reached
         agents[i].changeDest(dests);
         // agent movement
         agents[i].moveAgent();
     }
 }
 
-void drawObjects(sf::RenderWindow &App, Agent* agents, sf::CircleShape* dests)
+void drawObjects(sf::RenderWindow &App, Agent* agents, Dest* dests)
 {
 
     for(int i = 0; i < agents_count; i++)

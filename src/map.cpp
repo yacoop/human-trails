@@ -12,6 +12,7 @@ Tile::Tile(float x = 0, float y = 0, float grass_height = 0){
 
 sf::Vector2f Tile::getCenterPosition(){
     return getPosition()+getSize()*.5f;
+    // return getPosition();
 }
 
 float Tile::getGrassHeight(){
@@ -67,6 +68,29 @@ void drawMap(sf::RenderWindow &App, Tile** map){
             App.draw(map[i][j]);
         }
     }
+}
+
+Dest::Dest(float x = 0, float y = 0, float r = 5){
+    CircleShape();
+    setRadius(r);
+    setFillColor(sf::Color::Black);
+    setPosition(x, y);
+}
+
+sf::Vector2f Dest::getCenterPosition(){
+    return getPosition()+sf::Vector2f(getRadius(), getRadius());
+    // return getPosition();
+}
+
+Dest* destsInit(){
+    Dest* dests;
+    dests =  new Dest[dests_count];
+    for(int i = 0; i < dests_count; i++)
+    {
+        dests[i] = Dest();
+        dests[i].setPosition(window_width/2 +250*cos(2*M_PI*i/dests_count-M_PI/2), window_height/2 +250*sin(2*M_PI*i/dests_count-M_PI/2));
+    }
+    return dests;
 }
 
 //utils

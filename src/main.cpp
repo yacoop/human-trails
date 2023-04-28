@@ -16,23 +16,12 @@ int main()
     Agent* agents;
     agents = agentsInit();
 
-    sf::CircleShape* dests;
+    Dest* dests;
     dests = destsInit();
 
     // init map
     Tile ** map;
     map = mapInit();
-
-    // sf::CircleShape** circle = new sf::CircleShape*[map_width];
-    // for(int i = 0; i < map_width; i++)
-    // {
-    //     circle[i] = new sf::CircleShape[map_height];
-    //     for(int j = 0; j < map_height; j++)
-    //     {
-    //         circle[i][j] = sf::CircleShape(2);
-    //         circle[i][j].setPosition(map[i][j].getCenterPosition() - sf::Vector2f(2,2));
-    //     }
-    // }
 
     // main loop
     while (App.isOpen())
@@ -46,17 +35,13 @@ int main()
 
         App.clear();
 
-
-
         // draw map
         drawMap(App, map);
         
         //manage grass growth
         growGrass(map);
 
-        stompGrass(map, agents);
-
-        // manage agents movememt and destination
+        // all things that agents do
         manageAgents(agents, map, dests);
 
         //draw objects (agents and destinations)

@@ -8,8 +8,8 @@
 #include <ctime>
 #include <vector>
 
-#define agents_count 10
-#define dests_count 4
+#define agents_count 20
+
 
 class Agent: public sf::CircleShape{
     private:
@@ -23,6 +23,8 @@ class Agent: public sf::CircleShape{
         Agent(float x, float y, int dest, float speed, float angle,
             float r, sf::Color color);
 
+        sf::Vector2f getCenterPosition();
+        Tile* getTile(Tile** map);
         float getSpeed();
         void setSpeed(float speed);
 
@@ -34,19 +36,17 @@ class Agent: public sf::CircleShape{
 
         void moveAgent();
 
-        void setDirection(sf::CircleShape* dests);
+        void setDirection(Dest* dests);
 
-        void changeDest(sf::CircleShape* dests);
+        void changeDest(Dest* dests);
 
-        void setNearestTiles(Tile** map, sf::CircleShape* dests);
+        void setNearestTiles(Tile** map, Dest* dests);
 };
 
 Agent* agentsInit();
 
-sf::CircleShape* destsInit();
+void manageAgents(Agent* agents, Tile** map, Dest* dests);
 
-void manageAgents(Agent* agents, Tile** map, sf::CircleShape* dests);
-
-void drawObjects(sf::RenderWindow &App, Agent* agents, sf::CircleShape* dests);
+void drawObjects(sf::RenderWindow &App, Agent* agents, Dest* dests);
 
 void stompGrass(Tile** map, Agent* agents);
