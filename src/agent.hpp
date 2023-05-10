@@ -10,7 +10,7 @@
 
 #define agents_count 100
 
-class Agent: public sf::CircleShape{
+class Agent : public sf::CircleShape {
 private:
     float m_speed;
     float m_angle;
@@ -51,5 +51,5 @@ public:
     static void stompGrass(Tile** map, Agent* agents);
 };
 
-void drawObjects(sf::RenderWindow &App, Agent* agents, Dest* dests);
+void drawObjects(sf::RenderWindow& App, Agent* agents, Dest* dests);
 

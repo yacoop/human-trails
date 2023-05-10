@@ -7,25 +7,25 @@
 #include <vector>
 #include <array>
 
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 800
+constexpr int WINDOW_WIDTH = 800;
+constexpr int WINDOW_HEIGHT = 800;
 
-#define MAP_WIDTH 80
-#define MAP_HEIGHT 80
+constexpr int MAP_WIDTH = 80;
+constexpr int MAP_HEIGHT = 80;
 
-#define dests_count 5
+constexpr int dests_count = 5;
 
 #define TILE_WIDTH (WINDOW_WIDTH/MAP_WIDTH) 
 #define TILE_HEIGHT (WINDOW_HEIGHT/MAP_HEIGHT)
 
 #define Grey sf::Color(128, 128, 128)
 
-class Tile: public sf::RectangleShape
+class Tile : public sf::RectangleShape
 {
 private:
     float m_grassHeight;
     double m_lambda = 0.8;
-    
+
 
 public:
     Tile(float x, float y, float grass_height);
@@ -43,25 +43,23 @@ public:
 public:
     static Tile** mapInit();
     static void growGrass(Tile** map);
-    static void drawMap(sf::RenderWindow &App, Tile** map);
+    static void drawMap(sf::RenderWindow& App, Tile** map);
 
 };
 
-
-
 void growGrass(Tile** map);
-void drawMap(sf::RenderWindow &App, Tile** map);
+void drawMap(sf::RenderWindow& App, Tile** map);
 
 //utils
 double distance(sf::Vector2f v1, sf::Vector2f v2);
 
-class Dest: public sf::CircleShape
+class Dest : public sf::CircleShape
 {
 public:
     Dest(float x, float y, float r);
 
     sf::Vector2f getCenterPosition();
-    
+
 public:
     static Dest* init();
 
