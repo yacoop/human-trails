@@ -37,6 +37,15 @@
         "iostream": "cpp",
         "bit": "cpp",
         "cstddef": "cpp",
-        "istream": "cpp"
+        "istream": "cpp",
+        "atomic": "cpp",
+        "cstdarg": "cpp",
+        "algorithm": "cpp",
+        "iterator": "cpp",
+        "memory": "cpp",
+        "memory_resource": "cpp",
+        "numeric": "cpp",
+        "optional": "cpp",
+        "random": "cpp"
     }
 }

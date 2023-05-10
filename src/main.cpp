@@ -7,19 +7,16 @@ int main()
     srand((unsigned)time(0));
     
     // init window
-    sf::RenderWindow App(sf::VideoMode(window_width, window_height), "human-trails");
+    sf::RenderWindow App(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "human-trails");
     App.setFramerateLimit(60);
 
     // init agents and destinations
-    Agent* agents;
-    agents = agentsInit();
+    Agent* agents = Agent::init();
 
-    Dest* dests;
-    dests = destsInit();
+    Dest* dests = Dest::init();
 
     // init map
-    Tile ** map;
-    map = mapInit();
+    Tile** map = Tile::mapInit();
 
     // main loop
     while (App.isOpen())
@@ -34,19 +31,28 @@ int main()
         App.clear();
 
         // draw map
-        drawMap(App, map);
+        Tile::drawMap(App, map);
         
-        //manage grass growth
-        growGrass(map);
+        // manage grass growth
+        Tile::growGrass(map);
 
         // all things that agents do
-        manageAgents(agents, map, dests);
+        Agent::manage(agents, map, dests);
 
-        //draw objects (agents and destinations)
+        // draw objects (agents and destinations)
         drawObjects(App, agents, dests);
 
         App.display();
     }
 
-    return 0;
+    std::cout << Tile::tileCount << std::endl;
+    std::cout << Agent::agentCount << std::endl;
+    delete[] agents;
+    delete[] dests;
+    
+    for (int i = 0; i < MAP_WIDTH; i++)
+    {
+        delete[] map[i];
+    }
+    delete[] map;
 }
