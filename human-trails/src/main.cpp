@@ -1,6 +1,7 @@
 #include "agent.hpp"
 #include "map.hpp"
 
+
 int main()
 {
     // init random seed
@@ -10,13 +11,16 @@ int main()
     sf::RenderWindow App(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "human-trails");
     App.setFramerateLimit(60);
 
-    // init agents and destinations
-    Agent* agents = Agent::init();
+    std::vector<Agent> agents;
+    Agent::Init(agents, AGENTS_COUNT);
 
-    Dest* dests = Dest::init();
+    //Agent* agents = Agent::Init();
 
-    // init map
+    Dest* dests = Dest::Init();
+
+    std::cout << agents.size() << std::endl;
     Tile** map = Tile::mapInit();
+
 
     // main loop
     while (App.isOpen())
@@ -30,24 +34,22 @@ int main()
 
         App.clear();
 
-        // draw map
-        Tile::drawMap(App, map);
 
-        // manage grass growth
-        Tile::growGrass(map);
+        Tile::DrawMap(App, map);
+        Tile::GrowGrass(map);
+        Agent::Manage(agents, map, dests);
 
-        // all things that agents do
-        Agent::manage(agents, map, dests);
-
-        // draw objects (agents and destinations)
-        drawObjects(App, agents, dests);
+        DrawObjects(App, agents, dests);
 
         App.display();
     }
 
-    std::cout << Tile::tileCount << std::endl;
-    std::cout << Agent::agentCount << std::endl;
-    delete[] agents;
+
+    std::cout << Agent::sAgentCount << std::endl;
+    std::cout << Agent::sAgentCopied << std::endl;
+    std::cout << Tile::sTileCount << std::endl;
+    std::cout << Tile::sTileCopied << std::endl;
+
     delete[] dests;
 
     for (int i = 0; i < MAP_WIDTH; i++)
@@ -55,4 +57,8 @@ int main()
         delete[] map[i];
     }
     delete[] map;
+
+
+
+    return 0;
 }

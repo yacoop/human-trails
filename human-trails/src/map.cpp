@@ -1,61 +1,76 @@
 #include "map.hpp"
 
-int Tile::tileCount = 0;
+int Tile::sTileCount = 0;
+
+int Tile::sTileCopied = 0;
 
 Tile::Tile(float x = 0, float y = 0, float grass_height = 0) :
-    sf::RectangleShape(sf::Vector2f(TILE_WIDTH, TILE_HEIGHT)), m_grassHeight(grass_height)
+    sf::RectangleShape(sf::Vector2f(TILE_WIDTH, TILE_HEIGHT)), mGrassHeight(grass_height)
 {
     setFillColor(Grey);
     setPosition(x, y);
 
-    tileCount++;
+    sTileCount++;
 }
 
-sf::Vector2f Tile::getCenterPosition() {
+Tile::~Tile()
+{
+    sTileCount--;
+}
+
+Tile::Tile(Tile const& tile) :
+    sf::RectangleShape(tile), mGrassHeight(tile.mGrassHeight)
+{
+    sTileCopied++;
+	sTileCount++;
+}
+
+sf::Vector2f Tile::GetCenterPosition() {
     return getPosition() + getSize() * .5f;
 }
 
-float Tile::getGrassHeight() const
+float Tile::GetGrassHeight() const
 {
-    return m_grassHeight;
+    return mGrassHeight;
 }
 
-void Tile::setGrassHeight(float grass_height)
+void Tile::SetGrassHeight(float grass_height)
 {
-    this->m_grassHeight = grass_height;
+    this->mGrassHeight = grass_height;
 }
 
-void Tile::grow() {
-    setGrassHeight(getGrassHeight() + 0.01);
+void Tile::Grow() {
+    SetGrassHeight(GetGrassHeight() + 0.01);
 }
 
-void Tile::stomp() {
-    setGrassHeight(getGrassHeight() * m_lambda);
+void Tile::Stomp() {
+    SetGrassHeight(GetGrassHeight() * mLambda);
 }
 
 Tile** Tile::mapInit() {
-    Tile** map = new Tile * [MAP_WIDTH];
+    Tile** map = new Tile* [MAP_WIDTH];
     for (int i = 0; i < MAP_WIDTH; i++)
     {
         map[i] = new Tile[MAP_HEIGHT];
-        std::cout << Tile::tileCount << std::endl;
         for (int j = 0; j < MAP_HEIGHT; j++)
         {
-            map[i][j] = Tile((double)i * TILE_WIDTH, j * TILE_HEIGHT);
+            map[i][j] = Tile(i * TILE_WIDTH, j * TILE_HEIGHT);
         }
     }
     return map;
 }
 
-void Tile::growGrass(Tile** map) {
+
+
+void Tile::GrowGrass(Tile** map) {
     for (int i = 0; i < MAP_WIDTH; i++)
     {
         for (int j = 0; j < MAP_HEIGHT; j++)
         {
-            if (map[i][j].getGrassHeight() < 2)
+            if (map[i][j].GetGrassHeight() < 2)
             {
                 map[i][j].setFillColor(Grey);
-                map[i][j].grow();
+                map[i][j].Grow();
             }
             else
                 map[i][j].setFillColor(sf::Color::Green);
@@ -63,7 +78,7 @@ void Tile::growGrass(Tile** map) {
     }
 }
 
-void Tile::drawMap(sf::RenderWindow& App, Tile** map) {
+void Tile::DrawMap(sf::RenderWindow& App, Tile** map) {
     for (int i = 0; i < MAP_WIDTH; i++)
     {
         for (int j = 0; j < MAP_HEIGHT; j++)
@@ -81,23 +96,56 @@ Dest::Dest(float x = 0, float y = 0, float r = 5) :
     setPosition(x, y);
 }
 
-sf::Vector2f Dest::getCenterPosition() {
+sf::Vector2f Dest::GetCenterPosition() {
     return getPosition() + sf::Vector2f(getRadius(), getRadius());
 }
 
-Dest* Dest::init() {
+
+//init for testing
+//Dest* Dest::Init() {
+//    Dest* dests;
+//    dests = new Dest[DEST_COUNT];
+//    for (int i = 0; i < DEST_COUNT; i++)
+//    {
+//        dests[i] = Dest();
+//        dests[i].setPosition(WINDOW_WIDTH / 2 + 250 * cos(2 * M_PI * i / DEST_COUNT - M_PI / 2), WINDOW_HEIGHT / 2 + 250 * sin(2 * M_PI * i / DEST_COUNT - M_PI / 2));
+//    }
+//    return dests;
+//}
+
+//init that corresponds to the field
+Dest* Dest::Init() {
     Dest* dests;
-    dests = new Dest[dests_count];
-    for (int i = 0; i < dests_count; i++)
-    {
-        dests[i] = Dest();
-        dests[i].setPosition(WINDOW_WIDTH / 2 + 250 * cos(2 * M_PI * i / dests_count - M_PI / 2), WINDOW_HEIGHT / 2 + 250 * sin(2 * M_PI * i / dests_count - M_PI / 2));
-    }
+    dests = new Dest[6];
+    dests[0] = Dest(0.38 * WINDOW_WIDTH, 0.18 * WINDOW_HEIGHT); //mini
+    dests[1] = Dest(0.28 * WINDOW_WIDTH, 0.5 * WINDOW_HEIGHT); //fizya
+    dests[2] = Dest(0.1 * WINDOW_WIDTH, 0.75 * WINDOW_HEIGHT); //wibhis
+    dests[3] = Dest(0.45 * WINDOW_WIDTH, 0.8 * WINDOW_HEIGHT); //mechanika
+    dests[4] = Dest(0.63 * WINDOW_WIDTH, 0.44 * WINDOW_HEIGHT); //chemia
+    dests[5] = Dest(0.92 * WINDOW_WIDTH, 0.78 * WINDOW_HEIGHT); //gg
     return dests;
 }
 
+                             //mini  fiza   wibhis   mech     chem    gg
+int Dest::markov[6][6] = { {0,     10,     5,      5,      10,     6},  //mini
+                             {10,    0,      11,     2,      7,      70},  //fiza
+                             {5,     5,      0,      10,     10,     70},  //wibhis
+                             {5,     5,      10,     0,      10,     70},  //mech
+                             {0,     10,     15,    15,      0,      60},  //chem
+                             {30,    20,     10,    10,      30,     00}, }; //gg
+
+int Dest::SumProbability(int loc, int dest)
+{
+    int sum = 0;
+    for (int i = 0; i < dest; i++)
+        sum += markov[loc][i];
+    return sum;
+}
+
 //utils
-double distance(sf::Vector2f v1, sf::Vector2f v2) {
+double Distance(sf::Vector2f v1, sf::Vector2f v2) {
     return sqrt(pow(v1.x - v2.x, 2) + pow(v1.y - v2.y, 2));
 }
+
+
 
