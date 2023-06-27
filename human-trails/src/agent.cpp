@@ -5,7 +5,7 @@ int Agent::sAgentCount = 0;
 int Agent::sAgentCopied = 0;
 
 Agent::Agent() :
-    sf::CircleShape(), mSpeed(3), mAngle(0), mDestination(rand() % DEST_COUNT)
+    sf::CircleShape(), mSpeed(3), mAngle(0), mDestination(rand() % DESTS_COUNT)
 {
     setRadius(3.0f);
     setFillColor(sf::Color::Red);
@@ -15,7 +15,7 @@ Agent::Agent() :
 }
 
 Agent::Agent(float speed, float angle = 0, float r = 3.0f, sf::Color color = sf::Color::Red) :
-    sf::CircleShape(), mSpeed(speed), mAngle(angle), mDestination(rand() % DEST_COUNT)
+    sf::CircleShape(), mSpeed(speed), mAngle(angle), mDestination(rand() % DESTS_COUNT)
 {
     setRadius(r);
     setFillColor(color);
@@ -32,11 +32,11 @@ Agent::Agent(Agent const& agent) :
     sf::CircleShape(agent), mSpeed(agent.mSpeed), mAngle(agent.mAngle),
     mDestination(agent.mDestination)
 {
-	sAgentCount++;
+    sAgentCount++;
     sAgentCopied++;
 }
 
-sf::Vector2f Agent::GetCenterPosition() {
+sf::Vector2f Agent::GetCenterPosition() const{
     return getPosition() + sf::Vector2f(getRadius(), getRadius());
 }
 
@@ -54,14 +54,14 @@ void Agent::SetSpeed(float speed) {
     this->mSpeed = speed;
 }
 
-float Agent::GetAngle() {
+float Agent::GetAngle() const{
     return mAngle * (M_PI / 180);
 }
 void Agent::SetAngle(float angle) {
     this->mAngle = angle * (180 / M_PI);
 }
 
-int Agent::GetDestination() {
+int Agent::GetDestination() const{
     return mDestination;
 }
 
@@ -74,7 +74,7 @@ void Agent::MoveAgent()
     move(GetSpeed() * cos(GetAngle()), GetSpeed() * sin(GetAngle()));
 }
 
-void Agent::SetDirection(Dest* dests)
+void Agent::SetDirection(const std::vector<Dest>& dests)
 {
     double dy, dx;
     sf::Vector2f destCPos;
@@ -105,13 +105,13 @@ void Agent::SetDirection(Dest* dests)
     }
 }
 
-void Agent::ChangeDest(Dest* dests)
+void Agent::ChangeDest(const std::vector<Dest>& dests)
 {
     if (sqrt(pow(GetCenterPosition().x - dests[GetDestination()].GetCenterPosition().x, 2) + pow(GetCenterPosition().y - dests[GetDestination()].GetCenterPosition().y, 2)) < GetSpeed())
     {
         int randDest = 0;
         int randNumber = rand() % 100;
-        for (int i = 0; i < DEST_COUNT; i++)
+        for (int i = 0; i < dests.size(); i++)
         {
             if (randNumber < Dest::SumProbability(GetDestination(), i))
             {
@@ -119,12 +119,11 @@ void Agent::ChangeDest(Dest* dests)
                 break;
             }
         }
-      
         SetDestination(randDest);
     }
 }
 
-void Agent::SetNearestTiles(Tile** map, Dest* dests)
+void Agent::SetNearestTiles(Tile** map, const std::vector<Dest>& dests)
 {
     mNearestTiles.clear();
 
@@ -151,14 +150,30 @@ void Agent::SetNearestTiles(Tile** map, Dest* dests)
     {
         for (int k = y_min; k < y_max; k++)
         {
-            if (map[j][k].getFillColor() == Grey && Distance(GetCenterPosition(), map[j][k].GetCenterPosition()) < 10 * TILE_HEIGHT && Distance(GetCenterPosition(), dests[GetDestination()].GetCenterPosition()) > Distance(map[j][k].GetCenterPosition(), dests[GetDestination()].GetCenterPosition()))
+            if(canNearestTiles(map[j][k], dests))
             {
                 mNearestTiles.push_back(map[j][k]);
-                // map[j][k].setFillColor(sf::Color::Blue); // to color nearest tiles
+                //map[j][k].setFillColor(sf::Color::Blue); // to color nearest tiles
             }
         }
     }
 }
+
+bool Agent::canNearestTiles(Tile tile, const std::vector<Dest>& dests) const
+{
+    float dist = Distance(GetCenterPosition(), tile.GetCenterPosition());
+    if(tile.getFillColor() == Grey && dist < 10 * TILE_HEIGHT &&
+        isCloser(tile.GetCenterPosition(), GetCenterPosition(), dests[GetDestination()].GetCenterPosition()))
+        return 1;
+    else
+        return 0;
+}
+
+bool isCloser(sf::Vector2f p1, sf::Vector2f p2, sf::Vector2f target)
+{
+	return Distance(p1, target) < Distance(p2, target);
+}
+
 
 
 void Agent::Init(std::vector<Agent>& agents, int size) {
@@ -168,7 +183,7 @@ void Agent::Init(std::vector<Agent>& agents, int size) {
     }
 }
 
-void Agent::Manage(std::vector<Agent>& agents, Tile** map, Dest* dests)
+void Agent::Manage(std::vector<Agent>& agents, Tile** map, const std::vector<Dest>& dests)
 {
 
     int x, y;
@@ -186,14 +201,14 @@ void Agent::Manage(std::vector<Agent>& agents, Tile** map, Dest* dests)
     }
 }
 
-void DrawObjects(sf::RenderWindow& App, std::vector<Agent> agents, Dest* dests)
+void DrawObjects(sf::RenderWindow& App, const std::vector<Agent>& agents, const std::vector<Dest>& dests)
 {
 
     for (int i = 0; i < agents.size(); i++)
     {
         App.draw(agents[i]);
     }
-    for (int i = 0; i < DEST_COUNT; i++)
+    for (int i = 0; i < dests.size(); i++)
     {
         App.draw(dests[i]);
     }

@@ -1,15 +1,16 @@
 ﻿  agent.cpp
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(22,36): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(23,36): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(36,19): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(39,26): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(66,36): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(69,26): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(80,36): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(82,26): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(146,44): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(145,92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(145,34): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(155,12): warning C4101: 'y': unreferenced local variable
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(155,9): warning C4101: 'x': unreferenced local variable
+C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(12,72): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(12,24): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(22,72): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(22,24): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(45,36): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(46,36): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(58,19): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(61,26): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(88,36): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(91,26): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(102,36): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(104,26): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(173,12): warning C4101: 'y': unreferenced local variable
+C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(173,9): warning C4101: 'x': unreferenced local variable
   human-trails.vcxproj -> C:\Users\groob\source\repos\human-trails\bin\x64\Debug\human-trails.exe

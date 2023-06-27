@@ -11,14 +11,12 @@ int main()
     sf::RenderWindow App(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "human-trails");
     App.setFramerateLimit(60);
 
+    std::vector<Dest> dests;
+    Dest::Init(dests, DESTS_COUNT);
+
     std::vector<Agent> agents;
     Agent::Init(agents, AGENTS_COUNT);
 
-    //Agent* agents = Agent::Init();
-
-    Dest* dests = Dest::Init();
-
-    std::cout << agents.size() << std::endl;
     Tile** map = Tile::mapInit();
 
 
@@ -45,18 +43,16 @@ int main()
     }
 
 
-    std::cout << Agent::sAgentCount << std::endl;
-    std::cout << Agent::sAgentCopied << std::endl;
-    std::cout << Tile::sTileCount << std::endl;
-    std::cout << Tile::sTileCopied << std::endl;
+    //std::cout << Agent::sAgentCount << std::endl;
+    //std::cout << Agent::sAgentCopied << std::endl;
+    //std::cout << Tile::sTileCount << std::endl;
+    //std::cout << Tile::sTileCopied << std::endl;
 
-    delete[] dests;
-
-    for (int i = 0; i < MAP_WIDTH; i++)
-    {
-        delete[] map[i];
-    }
-    delete[] map;
+    //for (int i = 0; i < MAP_WIDTH; i++)
+    //{
+    //    delete[] map[i];
+    //}
+    //delete[] map;
 
 
 

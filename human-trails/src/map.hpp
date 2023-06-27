@@ -13,7 +13,7 @@ constexpr float WINDOW_HEIGHT = 800;
 constexpr int MAP_WIDTH = 80;
 constexpr int MAP_HEIGHT = 80;
 
-constexpr int DEST_COUNT = 6;
+constexpr int DESTS_COUNT = 6;
 
 constexpr float TILE_WIDTH = (WINDOW_WIDTH / MAP_WIDTH);
 constexpr float TILE_HEIGHT = (WINDOW_HEIGHT / MAP_HEIGHT);
@@ -31,7 +31,7 @@ public:
     Tile(float x, float y, float grass_height);
     ~Tile();
     Tile(Tile const& tile);
-    sf::Vector2f GetCenterPosition();
+    sf::Vector2f GetCenterPosition() const;
 
     float GetGrassHeight() const;
     void SetGrassHeight(float grass_height);
@@ -53,15 +53,16 @@ public:
 //utils
 double Distance(sf::Vector2f v1, sf::Vector2f v2);
 
+
 class Dest : public sf::CircleShape
 {
 public:
     Dest(float x, float y, float r);
 
-    sf::Vector2f GetCenterPosition();
+    sf::Vector2f GetCenterPosition() const;
 
 public:
-    static Dest* Init();
+    static void Init(std::vector<Dest>&, int size);
     static int markov[6][6];
     static int SumProbability(int loc, int dest);
 

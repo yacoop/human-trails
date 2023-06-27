@@ -25,24 +25,25 @@ public:
     ~Agent();
     Agent(Agent const& agent);
 
-    sf::Vector2f GetCenterPosition();
+    sf::Vector2f GetCenterPosition() const;
     Tile* GetTile(Tile** map);
+
     float GetSpeed() const;
     void SetSpeed(float speed);
 
-    float GetAngle();
+    float GetAngle() const;
     void SetAngle(float angle);
 
-    int GetDestination();
+    int GetDestination() const;
     void SetDestination(int destination);
 
     void MoveAgent();
 
-    void SetDirection(Dest* dests);
+    void SetDirection(const std::vector<Dest>& dests);
 
-    void ChangeDest(Dest* dests);
-
-    void SetNearestTiles(Tile** map, Dest* dests);
+    void ChangeDest(const std::vector<Dest>& dests);
+    bool canNearestTiles(Tile tile, const std::vector<Dest>& dests) const;
+    void SetNearestTiles(Tile** map, const std::vector<Dest>& dests);
 
 public:
     static int sAgentCount;
@@ -51,8 +52,8 @@ public:
 public:
     static void Init(std::vector<Agent>& agents, int size);
 
-    static void Manage(std::vector<Agent>& agents, Tile** map, Dest* dests);
+    static void Manage(std::vector<Agent>& agents, Tile** map, const std::vector<Dest>& dests);
 };
 
-void DrawObjects(sf::RenderWindow& App, std::vector<Agent> agents, Dest* dests);
-
+void DrawObjects(sf::RenderWindow& App, const std::vector<Agent>& agents, const std::vector<Dest>& dests);
+bool isCloser(sf::Vector2f p1, sf::Vector2f p2, sf::Vector2f target);
