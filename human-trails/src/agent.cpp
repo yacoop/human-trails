@@ -78,7 +78,7 @@ void Agent::SetDirection(const std::vector<Dest>& dests)
 
 void Agent::ChangeDest(const std::vector<Dest>& dests)
 {
-    if (sqrt(pow(GetCenterPosition().x - dests[GetDestination()].GetCenterPosition().x, 2) + pow(GetCenterPosition().y - dests[GetDestination()].GetCenterPosition().y, 2)) < pow(GetSpeed(),2))
+    if (pow(GetCenterPosition().x - dests[GetDestination()].GetCenterPosition().x, 2) + pow(GetCenterPosition().y - dests[GetDestination()].GetCenterPosition().y, 2) < pow(GetSpeed(),2))
     {
         int randDest = 0;
         int randNumber = rand() % 100;
