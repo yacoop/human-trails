@@ -150,12 +150,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\agent.cpp" />
+    <ClCompile Include="src\dest.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\map.cpp" />
+    <ClCompile Include="src\tile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\agent.hpp" />
-    <ClInclude Include="src\map.hpp" />
+    <ClInclude Include="src\agent.h" />
+    <ClInclude Include="src\dest.h" />
+    <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\tile.h" />
+    <ClInclude Include="src\map.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

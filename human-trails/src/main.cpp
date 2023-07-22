@@ -1,5 +1,6 @@
-#include "agent.hpp"
-#include "map.hpp"
+#include "agent.h"
+#include "map.h"
+
 
 
 int main()
@@ -11,14 +12,7 @@ int main()
     sf::RenderWindow App(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "human-trails");
     App.setFramerateLimit(60);
 
-    std::vector<Dest> dests;
-    Dest::Init(dests, DESTS_COUNT);
-
-    std::vector<Agent> agents;
-    Agent::Init(agents, AGENTS_COUNT);
-
-    Tile** map = Tile::mapInit();
-
+    Map map;
 
     // main loop
     while (App.isOpen())
@@ -32,27 +26,14 @@ int main()
 
         App.clear();
 
+        map.GrowGrass();
 
-        Tile::DrawMap(App, map);
-        Tile::GrowGrass(map);
-        Agent::Manage(agents, map, dests);
 
-        DrawObjects(App, agents, dests);
+        map.Manage();
 
+        map.Draw(App);
         App.display();
     }
-
-
-    //std::cout << Agent::sAgentCount << std::endl;
-    //std::cout << Agent::sAgentCopied << std::endl;
-    //std::cout << Tile::sTileCount << std::endl;
-    //std::cout << Tile::sTileCopied << std::endl;
-
-    //for (int i = 0; i < MAP_WIDTH; i++)
-    //{
-    //    delete[] map[i];
-    //}
-    //delete[] map;
 
     return 0;
 }

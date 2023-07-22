@@ -1,0 +1,42 @@
+#pragma once
+
+#include "common.h"
+#include "tile.h"
+#include "dest.h"
+#include "agent.h"
+
+
+class Map
+{
+public:
+	Map()
+	{
+		MapInit(sWidth, sHeight);
+		DestInit();
+		AgentInit(sAgentSize);
+	}
+
+	void GrowGrass();
+	void Manage();
+	void Draw(sf::RenderWindow& App);
+	
+	Tile* GetTile(Agent& agent);
+	void SetNearestTiles(Agent& agent);
+
+public:
+	static const int sWidth = 80;
+	static const int sHeight = 80;
+	static const int sSize = sWidth * sHeight;
+	static const int sDestSize = 6;
+	static const int sAgentSize = 100;
+
+private:
+	void MapInit(int width, int height);
+	void DestInit();
+	void AgentInit(int size);
+
+private:
+	std::vector<Tile> mTiles;
+	std::vector<Dest> mDests;
+	std::vector<Agent> mAgents;
+};

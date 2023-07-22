@@ -1,170 +1,115 @@
-#include "map.hpp"
+#include "map.h"
 
-int Tile::sTileCount = 0;
-
-int Tile::sTileCopied = 0;
-
-Tile::Tile(float x = 0, float y = 0, float grass_height = 0) :
-    sf::RectangleShape(sf::Vector2f(TILE_WIDTH, TILE_HEIGHT)), mGrassHeight(grass_height)
-{
-    setFillColor(Grey);
-    setPosition(x, y);
-
-    sTileCount++;
-}
-
-Tile::~Tile()
-{
-    sTileCount--;
-}
-
-Tile::Tile(Tile const& tile) :
-    sf::RectangleShape(tile), mGrassHeight(tile.mGrassHeight)
-{
-    sTileCopied++;
-	sTileCount++;
-}
-
-sf::Vector2f Tile::GetCenterPosition() const{
-    return getPosition() + getSize() * .5f;
-}
-
-float Tile::GetGrassHeight() const
-{
-    return mGrassHeight;
-}
-
-void Tile::SetGrassHeight(float grass_height)
-{
-    this->mGrassHeight = grass_height;
-}
-
-void Tile::Grow() {
-    SetGrassHeight(GetGrassHeight() + 0.01);
-}
-
-void Tile::Stomp() {
-    SetGrassHeight(GetGrassHeight() * mLambda);
-}
-
-Tile** Tile::mapInit() {
-    Tile** map = new Tile* [MAP_WIDTH];
-    for (int i = 0; i < MAP_WIDTH; i++)
+void Map::MapInit(int width, int height) {
+    for (int j = 0; j < height; j++)
     {
-        map[i] = new Tile[MAP_HEIGHT];
-        for (int j = 0; j < MAP_HEIGHT; j++)
+        for (int i = 0; i < width; i++)
         {
-            map[i][j] = Tile(i * TILE_WIDTH, j * TILE_HEIGHT);
+            mTiles.push_back(Tile(i * Tile::sWidth, j * Tile::sHeight));
         }
     }
-    return map;
+}
+
+void Map::DestInit() {
+    mDests.push_back(Dest(30 * Tile::sWidth, 14 * Tile::sHeight)); //mini
+    //mDests.push_back(Dest(0.38 * WINDOW_WIDTH, 0.18 * WINDOW_HEIGHT)); //mini
+    mDests.push_back(Dest(22 * Tile::sWidth, 40 * Tile::sHeight)); //fizyka
+    mDests.push_back(Dest(8 * Tile::sWidth, 60 * Tile::sHeight)); //wibhis
+    mDests.push_back(Dest(36 * Tile::sWidth, 64 * Tile::sHeight)); //mechanika
+    mDests.push_back(Dest(60 * Tile::sWidth, 35 * Tile::sHeight)); //chemia
+    mDests.push_back(Dest(74 * Tile::sWidth, 62 * Tile::sHeight)); //gg
+}
+
+void Map::AgentInit(int size) {
+    for (int i = 0; i < size; i++)
+    {
+        mAgents.push_back(Agent());
+    }
 }
 
 
-
-void Tile::GrowGrass(Tile** map) {
-    for (int i = 0; i < MAP_WIDTH; i++)
+void Map::GrowGrass() {
+    for (Tile& tile : mTiles)
     {
-        for (int j = 0; j < MAP_HEIGHT; j++)
+        if (tile.GetGrassHeight() < 2)
         {
-            if (map[i][j].GetGrassHeight() < 2)
+			tile.setFillColor(Grey);
+			tile.Grow();
+		}
+		else
+			tile.setFillColor(sf::Color::Green);
+	}
+}
+
+
+void Map::Manage()
+{
+    for (Agent& agent : mAgents)
+    {
+        GetTile(agent)->Stomp();
+        //setting nearest tiles
+        SetNearestTiles(agent);
+        //setting destination
+        agent.SetDirection(mDests);
+        // destination reached
+        agent.ChangeDest(mDests);
+        // agent movement
+        agent.MoveAgent();
+    }
+}
+
+void Map::Draw(sf::RenderWindow& App) {
+    for (Tile& tile : mTiles)
+    {
+		App.draw(tile);
+	}
+    for (Dest& dest : mDests)
+    {
+		App.draw(dest);
+	}
+    for (Agent& agent : mAgents)
+    {
+		App.draw(agent);
+	}
+}
+
+Tile* Map::GetTile(Agent& agent){
+    int x, y;
+    x = floor(agent.GetCenterPosition().x / Tile::sWidth);
+    y = floor(agent.GetCenterPosition().y / Tile::sHeight);
+    return &(mTiles[y*Map::sWidth+x]);
+}
+
+void Map::SetNearestTiles(Agent& agent)
+{
+    agent.mNearestTiles.clear();
+
+    // jako funkcja?
+    int x = (int)(agent.GetCenterPosition().x / Tile::sWidth);
+    int y = (int)(agent.GetCenterPosition().y / Tile::sHeight);
+    int x_min, x_max, y_min, y_max;
+
+    //setting iteration range
+    if (x < 10) x_min = 0;
+    else x_min = x - 10;
+
+    if (x > (Map::sWidth - 10)) x_max = Map::sWidth;
+    else x_max = x + 10;
+
+    if (y < 10) y_min = 0;
+    else y_min = y - 10;
+
+    if (y > (Map::sHeight - 10)) y_max = Map::sHeight;
+    else y_max = y + 10;
+
+
+
+    for (int k = y_min; k < y_max; k++)
+        for (int j = x_min; j < x_max; j++)
+        {
+            if (agent.canNearestTiles(Map::mTiles[k * Map::sWidth + j], mDests))
             {
-                map[i][j].setFillColor(Grey);
-                map[i][j].Grow();
+                agent.mNearestTiles.push_back(Map::mTiles[k * Map::sWidth + j]);
             }
-            else
-                map[i][j].setFillColor(sf::Color::Green);
         }
-    }
 }
-
-void Tile::DrawMap(sf::RenderWindow& App, Tile** map) {
-    for (int i = 0; i < MAP_WIDTH; i++)
-    {
-        for (int j = 0; j < MAP_HEIGHT; j++)
-        {
-            App.draw(map[i][j]);
-        }
-    }
-}
-
-Dest::Dest(float x = 0, float y = 0, float r = 5) :
-    sf::CircleShape(r)
-{
-    // setRadius(r);
-    setFillColor(sf::Color::Black);
-    setPosition(x, y);
-}
-
-sf::Vector2f Dest::GetCenterPosition() const{
-    return getPosition() + sf::Vector2f(getRadius(), getRadius());
-}
-
-
-//init for testing
-//Dest* Dest::Init() {
-//    Dest* dests;
-//    dests = new Dest[DEST_COUNT];
-//    for (int i = 0; i < DEST_COUNT; i++)
-//    {
-//        dests[i] = Dest();
-//        dests[i].setPosition(WINDOW_WIDTH / 2 + 250 * cos(2 * M_PI * i / DEST_COUNT - M_PI / 2), WINDOW_HEIGHT / 2 + 250 * sin(2 * M_PI * i / DEST_COUNT - M_PI / 2));
-//    }
-//    return dests;
-//}
-
-//init for testing
-//void Dest::Init(std::vector<Dest> dests, int size) {
-//    for (int i = 0; i < size; i++)
-//    {
-//        dests.push_back(Dest());
-//        dests[i].setPosition(WINDOW_WIDTH / 2 + 250 * cos(2 * M_PI * i / size - M_PI / 2), WINDOW_HEIGHT / 2 + 250 * sin(2 * M_PI * i / size - M_PI / 2));
-//    }
-//}
-
-//init that corresponds to the field
-//Dest* Dest::Init() {
-//    Dest* dests;
-//    dests = new Dest[6];
-//    dests[0] = Dest(0.38 * WINDOW_WIDTH, 0.18 * WINDOW_HEIGHT); //mini
-//    dests[1] = Dest(0.28 * WINDOW_WIDTH, 0.5 * WINDOW_HEIGHT); //fizya
-//    dests[2] = Dest(0.1 * WINDOW_WIDTH, 0.75 * WINDOW_HEIGHT); //wibhis
-//    dests[3] = Dest(0.45 * WINDOW_WIDTH, 0.8 * WINDOW_HEIGHT); //mechanika
-//    dests[4] = Dest(0.63 * WINDOW_WIDTH, 0.44 * WINDOW_HEIGHT); //chemia
-//    dests[5] = Dest(0.92 * WINDOW_WIDTH, 0.78 * WINDOW_HEIGHT); //gg
-//    return dests;
-//}
-
-void Dest::Init(std::vector<Dest>& dests, int size) {
-    dests.push_back(Dest(0.38 * WINDOW_WIDTH, 0.18 * WINDOW_HEIGHT)); //mini
-    dests.push_back(Dest(0.28 * WINDOW_WIDTH, 0.5 * WINDOW_HEIGHT)); //fizyka
-    dests.push_back(Dest(0.1 * WINDOW_WIDTH, 0.75 * WINDOW_HEIGHT)); //wibhis
-    dests.push_back(Dest(0.45 * WINDOW_WIDTH, 0.8 * WINDOW_HEIGHT)); //mechanika
-    dests.push_back(Dest(0.63 * WINDOW_WIDTH, 0.44 * WINDOW_HEIGHT)); //chemia
-    dests.push_back(Dest(0.92 * WINDOW_WIDTH, 0.78 * WINDOW_HEIGHT)); //gg
-}
-
-                             //mini  fiza   wibhis   mech     chem    gg
-int Dest::markov[6][6] = { {0,     10,     5,      5,      10,     6},  //mini
-                             {10,    0,      11,     2,      7,      70},  //fiza
-                             {5,     5,      0,      10,     10,     70},  //wibhis
-                             {5,     5,      10,     0,      10,     70},  //mech
-                             {0,     10,     15,    15,      0,      60},  //chem
-                             {30,    20,     10,    10,      30,     00}, }; //gg
-
-int Dest::SumProbability(int loc, int dest)
-{
-    int sum = 0;
-    for (int i = 0; i < dest; i++)
-        sum += markov[loc][i];
-    return sum;
-}
-
-//utils
-double Distance(sf::Vector2f v1, sf::Vector2f v2) {
-    return sqrt(pow(v1.x - v2.x, 2) + pow(v1.y - v2.y, 2));
-}
-
-
-
-
