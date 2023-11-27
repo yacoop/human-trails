@@ -58,17 +58,33 @@ sf::Vector2f Dest::GetCenterPosition() const {
 
 
 
-//mini  fiza   wibhis   mech     chem    gg
-int Dest::markov[6][6] = { {0,     10,     5,      5,      10,     70},  //mini
-                             {10,    0,      11,     2,      7,      70},  //fiza
-                             {5,     5,      0,      10,     10,     70},  //wibhis
-                             {5,     5,      10,     0,      10,     70},  //mech
-                             {0,     10,     15,    15,      0,      60},  //chem
-                             {30,    20,     10,    10,      30,     0}, }; //gg
+//                            //mini  fiza   wibhis   mech     chem    gg
+//double Dest::markov[6][6] = {   {0,    .05,    .05,    .05,    .05,    .80},  //mini
+//                             {.05,  .05,    .10,    .05,    .05,    .70},  //fiza
+//                             {.05,  .05,    .0,     .05,    .05,    .80},  //wibhis
+//                             {.05,  .05,    .10,    0,      .10,    .70},  //mech
+//                             {.05,  .10,    .15,    .10,    0,      .60},  //chem
+//                             {.30,  .10,    .40,    .05,    .15,    0}, }; //gg
 
-int Dest::SumProbability(int loc, int dest)
+//mini  fiza   wibhis   mech     chem    gg
+double Dest::markov[6][6] = { {0,    .05,    .05,    .05,    .05,    .80},  //mini
+                             {.05,  .05,    .10,    .05,    .05,    .70},  //fiza
+                             {.05,  .05,    .0,     .05,    .05,    .80},  //wibhis
+                             {.05,  .05,    .10,    0,      .10,    .70},  //mech
+                             {.01,  .0,    .0,    .0,    0,      .99},  //chem
+                             {.30,  .10,    .40,    .05,    .15,    0}, }; //gg
+
+//mini  fiza   wibhis   mech     chem    gg
+//double Dest::markov[6][6] = { {0,     0,     0,      0,      0,     0.1},  //mini
+//                             {0,    0,      0,     0,      0,      0.1},  //fiza
+//                             {0,     0,      0,      0,    0,    0.1},  //wibhis
+//                             {0,     0,      0,     0,      0,     0.1},  //mech
+//                             {0,     0,     0,    0,      0,      0.1},  //chem
+//                             {0,    0,     0,    0,      0,     0.1}, }; //gg
+
+double Dest::SumProbability(int loc, int dest)
 {
-    int sum = 0;
+    double sum = 0;
     for (int i = 0; i < dest; i++)
         sum += markov[loc][i];
     return sum;

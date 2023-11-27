@@ -10,6 +10,6 @@ public:
     sf::Vector2f GetCenterPosition() const;
 
 public:
-    static int markov[6][6];
-    static int SumProbability(int loc, int dest);
+    static double markov[6][6];
+    static double SumProbability(int loc, int dest);
 };

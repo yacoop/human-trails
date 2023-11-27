@@ -54,7 +54,7 @@ void Map::MapInit(int width, int height) {
 void Map::MapInit() {
     sf::Image image;
 
-    if (!image.loadFromFile(GetPath("map.png")))
+    if (!image.loadFromFile(GetPath("map0.png")))
     {
         MapInit(80, 80);
     }
@@ -79,13 +79,12 @@ void Map::MapInit() {
 }
 
 void Map::DestInit() {
-    mDests.push_back({ 30 * Tile::sWidth, 14 * Tile::sHeight }); //mini
-    //mDests.push_back(Dest(0.38 * WINDOW_WIDTH, 0.18 * WINDOW_HEIGHT)); //mini
-    mDests.push_back({ 22 * Tile::sWidth, 40 * Tile::sHeight }); //fizyka
-    mDests.push_back({ 8 * Tile::sWidth, 60 * Tile::sHeight }); //wibhis
-    mDests.push_back({ 36 * Tile::sWidth, 64 * Tile::sHeight }); //mechanika
-    mDests.push_back({ 60 * Tile::sWidth, 35 * Tile::sHeight }); //chemia
-    mDests.push_back({ 74 * Tile::sWidth, 62 * Tile::sHeight }); //gg
+    mDests.push_back({ 30 * Tile::sWidth, 10 * Tile::sHeight }); //mini
+    mDests.push_back({ 20 * Tile::sWidth, 37 * Tile::sHeight }); //fizyka
+    mDests.push_back({ 4 * Tile::sWidth, 59 * Tile::sHeight }); //wibhis
+    mDests.push_back({ 34 * Tile::sWidth, 62 * Tile::sHeight }); //mechanika
+    mDests.push_back({ 51 * Tile::sWidth, 32 * Tile::sHeight }); //chemia
+    mDests.push_back({ 76 * Tile::sWidth, 63 * Tile::sHeight }); //gg
 }
 
 void Map::AgentInit(int size) {

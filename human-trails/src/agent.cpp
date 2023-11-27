@@ -46,20 +46,49 @@ void Agent::MoveAgent()
 }
 
 
+//void Agent::ChangeDest(const std::vector<Dest>& dests)
+//{
+//    if (Distance2(GetCenterPosition(), dests[GetDestination()].GetCenterPosition()) < pow(GetSpeed(), 2))
+//    {
+//        int randDest = 0;
+//        double randNumber = (double) rand() / RAND_MAX;
+//        std::cout << randNumber << std::endl;
+//        for (int i = 0; i < dests.size(); i++)
+//        {
+//            if (randNumber < Dest::SumProbability(GetDestination(), i))
+//            {
+//                std::cout << randNumber << " " << Dest::SumProbability(GetDestination(), i) << " "  << i << std::endl;
+//                randDest = i;
+//                break;
+//            }
+//            //zle cso xD
+//
+//        }
+//        std::cout << "jesli wyzej nie bylo dlugiego outputu to co jest nie tal" << std::endl;
+//        SetDestination(randDest);
+//    }
+//}
+
 void Agent::ChangeDest(const std::vector<Dest>& dests)
 {
     if (Distance2(GetCenterPosition(), dests[GetDestination()].GetCenterPosition()) < pow(GetSpeed(), 2))
     {
         int randDest = 0;
-        int randNumber = rand() % 100;
+        double randNumber = (double)rand() / RAND_MAX;
+        //std::cout << randNumber << std::endl;
         for (int i = 0; i < dests.size(); i++)
         {
-            if (randNumber < Dest::SumProbability(GetDestination(), i))
+            randNumber -= Dest::markov[GetDestination()][i];
+            if (randNumber < 0)
             {
+                //std::cout << randNumber << " " << Dest::SumProbability(GetDestination(), i) << " " << i << std::endl;
                 randDest = i;
                 break;
             }
+            //zle cso xD
+
         }
+        //std::cout << "jesli wyzej nie bylo dlugiego outputu to co jest nie tal" << std::endl;
         SetDestination(randDest);
     }
 }
