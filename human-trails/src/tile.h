@@ -6,7 +6,8 @@
 #define Brown sf::Color(70, 60, 42)
 #define Green sf::Color(30, 150, 15)
 
-enum State { pavement = 0, dirt };
+
+enum State { obstacle = -1 ,pavement = 0, dirt };
 
 class Tile : public sf::RectangleShape
 {

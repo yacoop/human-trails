@@ -1,5 +1,45 @@
 #include "map.h"
 
+void Map::SetDirection(Agent& agent)
+{
+    double dy = agent.GetCenterPosition().y, dx = agent.GetCenterPosition().x;
+    sf::Vector2f destCPos;
+
+    if (agent.mNearestTiles.size() <= 1)
+    {
+        destCPos = mDests[agent.GetDestination()].GetCenterPosition();
+        dy -= destCPos.y;
+        dx -= destCPos.x;
+        if (agent.GetCenterPosition().x >= destCPos.x)
+            agent.SetAngle(atan(dy / dx) + M_PI);
+        
+        else
+            agent.SetAngle(atan(dy / dx));
+    }
+    else
+    {
+        int i = rand() % agent.mNearestTiles.size();
+
+        destCPos = agent.mNearestTiles[i].GetCenterPosition();
+        dy -= agent.mNearestTiles[i].GetCenterPosition().y;
+        dx -= agent.mNearestTiles[i].GetCenterPosition().x;
+
+        if (agent.GetCenterPosition().x >= destCPos.x)
+            agent.SetAngle(atan(dy / dx) + M_PI);
+        else
+            agent.SetAngle(atan(dy / dx));
+    }
+
+    sf::Vector2f nextPos = agent.GetCenterPosition() + agent.GetSpeed() * sf::Vector2f(cos(agent.GetAngle()) , sin(agent.GetAngle()));
+    double angle;
+    while (mTiles[(int)floor(nextPos.y / Tile::sHeight) * Map::sWidth + (int)floor(nextPos.x / Tile::sWidth)].state == obstacle)
+    {
+        angle = rand() % 2 == 1 ? (double)rand() / RAND_MAX * 20 / 180 * M_PI : -(double)rand() / RAND_MAX * 20 / 180 * M_PI;
+		agent.SetAngle(agent.GetAngle() + angle);
+        nextPos = agent.GetCenterPosition() + agent.GetSpeed() * sf::Vector2f(cos(agent.GetAngle()), sin(agent.GetAngle()));
+	}
+}
+
 //inits
 void Map::MapInit(int width, int height) {
     for (int j = 0; j < height; j++)
@@ -27,23 +67,25 @@ void Map::MapInit() {
             for (int i = 0; i < width; i++)
             {
                 sf::Color color = image.getPixel(i, j);
-                if (color.r == sf::Color::Black.r)
-                    mTiles.push_back(Tile(i * Tile::sWidth, j * Tile::sHeight, pavement));
+                if (color.r == sf::Color::Red.r && color.g == sf::Color::Red.g && color.b == sf::Color::Red.b)
+                    mTiles.push_back({ i * Tile::sWidth, j * Tile::sHeight, obstacle });
+                else if (color.r == sf::Color::Blue.r && color.g == sf::Color::Blue.g && color.b == sf::Color::Blue.b)
+                    mTiles.push_back({ i * Tile::sWidth, j * Tile::sHeight, pavement });
                 else
-                    mTiles.push_back(Tile(i * Tile::sWidth, j * Tile::sHeight, dirt));
+                    mTiles.push_back({ i * Tile::sWidth, j * Tile::sHeight, dirt });
             }
         }
     }
 }
 
 void Map::DestInit() {
-    mDests.push_back(Dest(30 * Tile::sWidth, 14 * Tile::sHeight)); //mini
+    mDests.push_back({ 30 * Tile::sWidth, 14 * Tile::sHeight }); //mini
     //mDests.push_back(Dest(0.38 * WINDOW_WIDTH, 0.18 * WINDOW_HEIGHT)); //mini
-    mDests.push_back(Dest(22 * Tile::sWidth, 40 * Tile::sHeight)); //fizyka
-    mDests.push_back(Dest(8 * Tile::sWidth, 60 * Tile::sHeight)); //wibhis
-    mDests.push_back(Dest(36 * Tile::sWidth, 64 * Tile::sHeight)); //mechanika
-    mDests.push_back(Dest(60 * Tile::sWidth, 35 * Tile::sHeight)); //chemia
-    mDests.push_back(Dest(74 * Tile::sWidth, 62 * Tile::sHeight)); //gg
+    mDests.push_back({ 22 * Tile::sWidth, 40 * Tile::sHeight }); //fizyka
+    mDests.push_back({ 8 * Tile::sWidth, 60 * Tile::sHeight }); //wibhis
+    mDests.push_back({ 36 * Tile::sWidth, 64 * Tile::sHeight }); //mechanika
+    mDests.push_back({ 60 * Tile::sWidth, 35 * Tile::sHeight }); //chemia
+    mDests.push_back({ 74 * Tile::sWidth, 62 * Tile::sHeight }); //gg
 }
 
 void Map::AgentInit(int size) {
@@ -53,19 +95,18 @@ void Map::AgentInit(int size) {
     }
 }
 
-//loop methods
 void Map::GrowGrass() {
     for (Tile& tile : mTiles)
     {
-        if(tile.state == pavement)
-            tile.setFillColor(Grey);
-		else if (tile.GetGrassHeight() < 2) //state == dirt
-        {
-			tile.setFillColor(Brown);
-			tile.Grow();
-		}
-		else
-			tile.setFillColor(Green);
+        if (tile.state == dirt) {
+            if (tile.GetGrassHeight() < 2)
+            {
+                tile.setFillColor(Brown);
+                tile.Grow();
+            }
+            else
+                tile.setFillColor(Green);
+        }
 	}
 }
 
@@ -76,8 +117,8 @@ void Map::Manage()
         GetTile(agent)->Stomp();
         //setting nearest tiles
         SetNearestTiles(agent);
-        //setting destination
-        agent.SetDirection(mDests);
+        //setting direction to destination
+        SetDirection(agent);
         // destination reached
         agent.ChangeDest(mDests);
         // agent movement
@@ -103,18 +144,17 @@ void Map::Draw(sf::RenderWindow& window) {
 //getters
 Tile* Map::GetTile(Agent& agent){
     int x, y;
-    x = floor(agent.GetCenterPosition().x / Tile::sWidth);
-    y = floor(agent.GetCenterPosition().y / Tile::sHeight);
+    x = (int) floor(agent.GetCenterPosition().x / Tile::sWidth);
+    y = (int) floor(agent.GetCenterPosition().y / Tile::sHeight);
     return &(mTiles[y*Map::sWidth+x]);
 }
 
 void Map::SetNearestTiles(Agent& agent)
 {
     agent.mNearestTiles.clear();
-
-    // jako funkcja?
-    int x = (int)(agent.GetCenterPosition().x / Tile::sWidth);
-    int y = (int)(agent.GetCenterPosition().y / Tile::sHeight);
+ 
+    int x = (int) floor(agent.GetCenterPosition().x / Tile::sWidth);
+    int y = (int) floor(agent.GetCenterPosition().y / Tile::sHeight);
     int x_min, x_max, y_min, y_max;
 
     //setting iteration range
@@ -129,8 +169,6 @@ void Map::SetNearestTiles(Agent& agent)
 
     if (y > (Map::sHeight - 10)) y_max = Map::sHeight;
     else y_max = y + 10;
-
-
 
     for (int k = y_min; k < y_max; k++)
         for (int j = x_min; j < x_max; j++)

@@ -8,8 +8,8 @@ Agent::Agent() : // jakos inaczej
     sf::CircleShape(), mSpeed(3), mAngle(0), mDestination(rand() % 6)
 {
     setRadius(3.0f);
-    setFillColor(sf::Color::Red);
-    setPosition(RandomPos(WINDOW_WIDTH, WINDOW_HEIGHT));
+    setFillColor(sf::Color::Blue);
+    setPosition(WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
 
     //sAgentCount++;
 }
@@ -25,11 +25,11 @@ void Agent::SetSpeed(float speed) {
     this->mSpeed = speed;
 }
 
-float Agent::GetAngle() const{
-    return mAngle * (M_PI / 180);
+float Agent::GetAngle() const{ //zwraca w radianach
+    return mAngle;
 }
-void Agent::SetAngle(float angle) {
-    this->mAngle = angle * (180 / M_PI);
+void Agent::SetAngle(float angle) { //podaje w radianach
+    this->mAngle = angle;
 }
 
 int Agent::GetDestination() const{
@@ -45,36 +45,6 @@ void Agent::MoveAgent()
     move(GetSpeed() * cos(GetAngle()), GetSpeed() * sin(GetAngle()));
 }
 
-void Agent::SetDirection(const std::vector<Dest>& dests)
-{
-    double dy, dx;
-    sf::Vector2f destCPos;
-
-    if (mNearestTiles.size() <= 1)
-    {
-        destCPos = dests[GetDestination()].GetCenterPosition();
-        dy = GetCenterPosition().y - destCPos.y;
-        dx = GetCenterPosition().x - destCPos.x;
-        if (GetCenterPosition().x >= destCPos.x)
-            SetAngle(atan(dy / dx) + M_PI);
-
-        else
-            SetAngle(atan(dy / dx));
-    }
-    else
-    {
-        int i = rand() % mNearestTiles.size();
-
-        destCPos = mNearestTiles[i].GetCenterPosition();
-        dy = GetCenterPosition().y - mNearestTiles[i].GetCenterPosition().y;
-        dx = GetCenterPosition().x - mNearestTiles[i].GetCenterPosition().x;
-
-        if (GetCenterPosition().x >= destCPos.x)
-            SetAngle(atan(dy / dx) + M_PI);
-        else
-            SetAngle(atan(dy / dx));
-    }
-}
 
 void Agent::ChangeDest(const std::vector<Dest>& dests)
 {

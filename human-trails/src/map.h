@@ -31,6 +31,7 @@ public:
 	static const int sAgentSize = 100;
 
 private:
+	void SetDirection(Agent& agent);
 	void MapInit(int width, int height);
 	void MapInit();
 	void DestInit();

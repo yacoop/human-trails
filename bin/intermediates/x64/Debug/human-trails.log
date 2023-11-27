@@ -1,25 +1,8 @@
-﻿  agent.cpp
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(12,72): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(12,24): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(22,72): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(22,24): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(45,36): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(46,36): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(58,19): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(61,26): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(88,36): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(91,26): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(102,36): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(104,26): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(163,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(188,12): warning C4101: 'y': unreferenced local variable
-C:\Users\groob\source\repos\human-trails\human-trails\src\agent.cpp(188,9): warning C4101: 'x': unreferenced local variable
-  main.cpp
-C:\Users\groob\source\repos\human-trails\human-trails\src\main.cpp(11,54): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\main.cpp(11,40): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
-  map.cpp
-C:\Users\groob\source\repos\human-trails\human-trails\src\map.cpp(43,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\map.cpp(47,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\groob\source\repos\human-trails\human-trails\src\map.cpp(140,66): warning C4305: 'argument': truncation from 'double' to 'float'
-  Generating Code...
+﻿  map.cpp
+C:\Users\groob\source\repos\human-trails\human-trails\src\map.cpp(14,42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\map.cpp(17,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\map.cpp(28,42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\map.cpp(30,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\map.cpp(146,14): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\groob\source\repos\human-trails\human-trails\src\map.cpp(147,14): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
   human-trails.vcxproj -> C:\Users\groob\source\repos\human-trails\bin\x64\Debug\human-trails.exe

@@ -7,10 +7,22 @@ const float Tile::sHeight = 10;
 Tile::Tile(float x = 0, float y = 0, State state = dirt) :
     sf::RectangleShape(sf::Vector2f(sWidth, sHeight))
 {
-    setFillColor(Grey);
     setPosition(x, y);
     this->state = state;
     //sTileCount++;
+
+    if (state == pavement)
+    {
+		setFillColor(Grey);
+	}
+    else if (state == dirt)
+    {
+		setFillColor(Brown);
+	}
+    else
+    {
+		setFillColor(sf::Color::Red);
+	}
 }
 
 //Tile::~Tile()

@@ -31,8 +31,6 @@ public:
 
     void MoveAgent();
 
-    void SetDirection(const std::vector<Dest>& dests);
-
     void ChangeDest(const std::vector<Dest>& dests);
     bool canNearestTiles(Tile tile, const std::vector<Dest>& dests) const;
 
