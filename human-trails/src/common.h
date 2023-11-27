@@ -2,8 +2,11 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <string>
 
 constexpr float WINDOW_WIDTH = 800;
-constexpr float WINDOW_HEIGHT = 800;
+constexpr int WINDOW_HEIGHT = 800;
 
-//utils
+
+std::string GetPath(std::string name);
+

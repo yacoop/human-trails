@@ -1,14 +1,5 @@
 #pragma once
 
-#include <iostream>
-#include <cmath>
-#include <ctime>
-#include <vector>
-#include <array>
-
-#include <SFML/Graphics.hpp>
-
-
 #include "dest.h"
 #include "tile.h"
 #include "common.h"
@@ -55,4 +46,4 @@ private:
 };
 
 bool inline IsCloser(sf::Vector2f p1, sf::Vector2f p2, sf::Vector2f target);
-double Distance(sf::Vector2f v1, sf::Vector2f v2);
+double Distance2(const sf::Vector2f v1, const sf::Vector2f v2);

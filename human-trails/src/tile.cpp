@@ -4,12 +4,12 @@ const float Tile::sWidth = 10;
 const float Tile::sHeight = 10;
 
 
-Tile::Tile(float x = 0, float y = 0) :
+Tile::Tile(float x = 0, float y = 0, State state = dirt) :
     sf::RectangleShape(sf::Vector2f(sWidth, sHeight))
 {
     setFillColor(Grey);
     setPosition(x, y);
-
+    this->state = state;
     //sTileCount++;
 }
 

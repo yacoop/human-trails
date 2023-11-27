@@ -50,7 +50,7 @@ void Agent::SetDirection(const std::vector<Dest>& dests)
     double dy, dx;
     sf::Vector2f destCPos;
 
-    if (mNearestTiles.size() < 1)
+    if (mNearestTiles.size() <= 1)
     {
         destCPos = dests[GetDestination()].GetCenterPosition();
         dy = GetCenterPosition().y - destCPos.y;
@@ -78,7 +78,7 @@ void Agent::SetDirection(const std::vector<Dest>& dests)
 
 void Agent::ChangeDest(const std::vector<Dest>& dests)
 {
-    if (pow(GetCenterPosition().x - dests[GetDestination()].GetCenterPosition().x, 2) + pow(GetCenterPosition().y - dests[GetDestination()].GetCenterPosition().y, 2) < pow(GetSpeed(),2))
+    if (Distance2(GetCenterPosition(), dests[GetDestination()].GetCenterPosition()) < pow(GetSpeed(), 2))
     {
         int randDest = 0;
         int randNumber = rand() % 100;
@@ -97,8 +97,8 @@ void Agent::ChangeDest(const std::vector<Dest>& dests)
 
 bool Agent::canNearestTiles(Tile tile, const std::vector<Dest>& dests) const
 {
-    float dist = Distance(GetCenterPosition(), tile.GetCenterPosition());
-    if(tile.getFillColor() == Grey && dist < 10 * Tile::sHeight &&
+    float dist2 = Distance2(GetCenterPosition(), tile.GetCenterPosition());
+    if((tile.getFillColor() == Brown || tile.getFillColor() == Grey) && dist2 < pow(10 * Tile::sHeight,2) &&
         IsCloser(tile.GetCenterPosition(), GetCenterPosition(), dests[GetDestination()].GetCenterPosition()))
         return 1;
     else
@@ -109,7 +109,7 @@ bool Agent::canNearestTiles(Tile tile, const std::vector<Dest>& dests) const
 
 bool inline IsCloser(sf::Vector2f p1, sf::Vector2f p2, sf::Vector2f target)
 {
-    return Distance(p1, target) < Distance(p2, target);
+    return Distance2(p1, target) < Distance2(p2, target);
 }
 
 sf::Vector2f Agent::RandomPos(float width, float height)
@@ -117,6 +117,6 @@ sf::Vector2f Agent::RandomPos(float width, float height)
     return sf::Vector2f(rand() % (int)(width - 2 * getRadius()), rand() % (int)(height - 2 * getRadius()));
 }
 
-double Distance(sf::Vector2f v1, sf::Vector2f v2) { // chyba nie potrzebuje
-    return sqrt(pow(v1.x - v2.x, 2) + pow(v1.y - v2.y, 2));
+double Distance2(const sf::Vector2f v1, const sf::Vector2f v2){ // chyba nie potrzebuje
+    return pow(v1.x - v2.x, 2) + pow(v1.y - v2.y, 2);
 }

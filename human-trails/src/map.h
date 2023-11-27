@@ -11,14 +11,14 @@ class Map
 public:
 	Map()
 	{
-		MapInit(sWidth, sHeight);
+		MapInit();
 		DestInit();
 		AgentInit(sAgentSize);
 	}
 
 	void GrowGrass();
 	void Manage();
-	void Draw(sf::RenderWindow& App);
+	void Draw(sf::RenderWindow& window);
 	
 	Tile* GetTile(Agent& agent);
 	void SetNearestTiles(Agent& agent);
@@ -32,6 +32,7 @@ public:
 
 private:
 	void MapInit(int width, int height);
+	void MapInit();
 	void DestInit();
 	void AgentInit(int size);
 

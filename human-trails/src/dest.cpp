@@ -59,12 +59,12 @@ sf::Vector2f Dest::GetCenterPosition() const {
 
 
 //mini  fiza   wibhis   mech     chem    gg
-int Dest::markov[6][6] = { {0,     10,     5,      5,      10,     6},  //mini
+int Dest::markov[6][6] = { {0,     10,     5,      5,      10,     70},  //mini
                              {10,    0,      11,     2,      7,      70},  //fiza
                              {5,     5,      0,      10,     10,     70},  //wibhis
                              {5,     5,      10,     0,      10,     70},  //mech
                              {0,     10,     15,    15,      0,      60},  //chem
-                             {30,    20,     10,    10,      30,     00}, }; //gg
+                             {30,    20,     10,    10,      30,     0}, }; //gg
 
 int Dest::SumProbability(int loc, int dest)
 {

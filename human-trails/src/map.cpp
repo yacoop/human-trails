@@ -1,11 +1,37 @@
 #include "map.h"
 
+//inits
 void Map::MapInit(int width, int height) {
     for (int j = 0; j < height; j++)
     {
         for (int i = 0; i < width; i++)
         {
-            mTiles.push_back(Tile(i * Tile::sWidth, j * Tile::sHeight));
+            mTiles.push_back(Tile(i * Tile::sWidth, j * Tile::sHeight, dirt));
+        }
+    }
+}
+
+void Map::MapInit() {
+    sf::Image image;
+
+    if (!image.loadFromFile(GetPath("map.png")))
+    {
+        MapInit(80, 80);
+    }
+    else
+    {
+        int width = image.getSize().x;
+        int height = image.getSize().y;
+        for (int j = 0; j < height; j++)
+        {
+            for (int i = 0; i < width; i++)
+            {
+                sf::Color color = image.getPixel(i, j);
+                if (color.r == sf::Color::Black.r)
+                    mTiles.push_back(Tile(i * Tile::sWidth, j * Tile::sHeight, pavement));
+                else
+                    mTiles.push_back(Tile(i * Tile::sWidth, j * Tile::sHeight, dirt));
+            }
         }
     }
 }
@@ -27,20 +53,21 @@ void Map::AgentInit(int size) {
     }
 }
 
-
+//loop methods
 void Map::GrowGrass() {
     for (Tile& tile : mTiles)
     {
-        if (tile.GetGrassHeight() < 2)
+        if(tile.state == pavement)
+            tile.setFillColor(Grey);
+		else if (tile.GetGrassHeight() < 2) //state == dirt
         {
-			tile.setFillColor(Grey);
+			tile.setFillColor(Brown);
 			tile.Grow();
 		}
 		else
-			tile.setFillColor(sf::Color::Green);
+			tile.setFillColor(Green);
 	}
 }
-
 
 void Map::Manage()
 {
@@ -58,21 +85,22 @@ void Map::Manage()
     }
 }
 
-void Map::Draw(sf::RenderWindow& App) {
+void Map::Draw(sf::RenderWindow& window) {
     for (Tile& tile : mTiles)
     {
-		App.draw(tile);
+		window.draw(tile);
 	}
     for (Dest& dest : mDests)
     {
-		App.draw(dest);
+		window.draw(dest);
 	}
     for (Agent& agent : mAgents)
     {
-		App.draw(agent);
+		window.draw(agent);
 	}
 }
 
+//getters
 Tile* Map::GetTile(Agent& agent){
     int x, y;
     x = floor(agent.GetCenterPosition().x / Tile::sWidth);
