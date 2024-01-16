@@ -1,4 +1,5 @@
 #include "sim.h"
+#include <fstream>
 
 void Sim::Run()
 {
@@ -7,13 +8,16 @@ void Sim::Run()
 
     // init window
     this->win.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "human-trails");
-    this->win.setFramerateLimit(60);
+    this->win.setFramerateLimit(0);
 
     Map map;
 
+    int c = 0;
+
     // main loop
-    while (this->win.isOpen())
+    while (this->win.isOpen() && c < 60*60*5)
     {
+
         sf::Event event;
         while (this->win.pollEvent(event))
         {
@@ -28,5 +32,21 @@ void Sim::Run()
         map.Draw(this->win);
 
         this->win.display();
+        c++;
     }
+
+    std::ofstream myfile("./out/density.txt");
+    int x = 0;
+    int y = 0;
+    for (Tile& tile : map.mTiles)
+    {
+        if (x >= 80)
+        {
+			x = 0;
+			y++;
+		}
+        myfile << x << " " << y << " " << tile.beenThere << std::endl;
+        x++;
+	}
+
 }

@@ -26,10 +26,10 @@ public:
     static const float sWidth;
     static const float sHeight;
     State state = dirt;
-    //bool state = 1;
+    int beenThere = 0;
 
 private:
-    float mGrassHeight = 0;
+    float mGrassHeight = 2;
     float mLambda = 0.8f;
 };
 

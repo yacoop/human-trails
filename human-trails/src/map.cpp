@@ -46,7 +46,7 @@ void Map::MapInit(int width, int height) {
     {
         for (int i = 0; i < width; i++)
         {
-            mTiles.push_back(Tile(i * Tile::sWidth, j * Tile::sHeight, dirt));
+            mTiles.push_back({ i * Tile::sWidth, j * Tile::sHeight, dirt });
         }
     }
 }
@@ -54,7 +54,7 @@ void Map::MapInit(int width, int height) {
 void Map::MapInit() {
     sf::Image image;
 
-    if (!image.loadFromFile(GetPath("map0.png")))
+    if (!image.loadFromFile(MAP_PATH))
     {
         MapInit(80, 80);
     }
@@ -79,18 +79,20 @@ void Map::MapInit() {
 }
 
 void Map::DestInit() {
-    mDests.push_back({ 30 * Tile::sWidth, 10 * Tile::sHeight }); //mini
-    mDests.push_back({ 20 * Tile::sWidth, 37 * Tile::sHeight }); //fizyka
-    mDests.push_back({ 4 * Tile::sWidth, 59 * Tile::sHeight }); //wibhis
-    mDests.push_back({ 34 * Tile::sWidth, 62 * Tile::sHeight }); //mechanika
-    mDests.push_back({ 51 * Tile::sWidth, 32 * Tile::sHeight }); //chemia
-    mDests.push_back({ 76 * Tile::sWidth, 63 * Tile::sHeight }); //gg
+    mDests.push_back({ 31 * Tile::sWidth, 10 * Tile::sHeight }); //mini
+    mDests.push_back({ 21 * Tile::sWidth, 36 * Tile::sHeight }); //fizyka
+    mDests.push_back({ 5 * Tile::sWidth, 59 * Tile::sHeight }); //wibhis
+    mDests.push_back({ 36 * Tile::sWidth, 62 * Tile::sHeight }); //mechanika
+    mDests.push_back({ 51 * Tile::sWidth, 31 * Tile::sHeight }); //chemia
+    mDests.push_back({ 76 * Tile::sWidth, 62 * Tile::sHeight }); //gg
 }
 
 void Map::AgentInit(int size) {
+    int r;
     for (int i = 0; i < size; i++)
     {
-        mAgents.push_back(Agent());
+        r = rand() % mDests.size();
+        mAgents.push_back({ mDests[r].GetCenterPosition(), r });
     }
 }
 
@@ -157,17 +159,11 @@ void Map::SetNearestTiles(Agent& agent)
     int x_min, x_max, y_min, y_max;
 
     //setting iteration range
-    if (x < 10) x_min = 0;
-    else x_min = x - 10;
+    x_min = x < searchDist ? 0 : x - searchDist;
+    x_max = x > (Map::sWidth - searchDist) ? Map::sWidth : x + searchDist;
 
-    if (x > (Map::sWidth - 10)) x_max = Map::sWidth;
-    else x_max = x + 10;
-
-    if (y < 10) y_min = 0;
-    else y_min = y - 10;
-
-    if (y > (Map::sHeight - 10)) y_max = Map::sHeight;
-    else y_max = y + 10;
+    y_min = y < searchDist ? 0 : y - searchDist;
+    y_max = y > (Map::sHeight - searchDist) ? Map::sHeight : y + searchDist;
 
     for (int k = y_min; k < y_max; k++)
         for (int j = x_min; j < x_max; j++)
@@ -175,6 +171,7 @@ void Map::SetNearestTiles(Agent& agent)
             if (agent.canNearestTiles(Map::mTiles[k * Map::sWidth + j], mDests))
             {
                 agent.mNearestTiles.push_back(Map::mTiles[k * Map::sWidth + j]);
+                //Map::mTiles[k * Map::sWidth + j].setFillColor(sf::Color::Cyan);
             }
         }
 }

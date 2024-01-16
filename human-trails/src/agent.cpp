@@ -1,17 +1,12 @@
 #include "agent.h"
 
-//int Agent::sAgentCount = 0;
-//
-//int Agent::sAgentCopied = 0;
-
-Agent::Agent() : // jakos inaczej
-    sf::CircleShape(), mSpeed(3), mAngle(0), mDestination(rand() % 6)
+Agent::Agent(sf::Vector2f pos, int destination) :
+    sf::CircleShape(), mSpeed(3), mAngle(0), mDestination(destination)
 {
     setRadius(3.0f);
     setFillColor(sf::Color::Blue);
-    setPosition(WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
+    setPosition(pos.x, pos.y);
 
-    //sAgentCount++;
 }
 
 sf::Vector2f Agent::GetCenterPosition() const{
@@ -25,10 +20,10 @@ void Agent::SetSpeed(float speed) {
     this->mSpeed = speed;
 }
 
-float Agent::GetAngle() const{ //zwraca w radianach
+float Agent::GetAngle() const{
     return mAngle;
 }
-void Agent::SetAngle(float angle) { //podaje w radianach
+void Agent::SetAngle(float angle) {
     this->mAngle = angle;
 }
 
@@ -46,49 +41,22 @@ void Agent::MoveAgent()
 }
 
 
-//void Agent::ChangeDest(const std::vector<Dest>& dests)
-//{
-//    if (Distance2(GetCenterPosition(), dests[GetDestination()].GetCenterPosition()) < pow(GetSpeed(), 2))
-//    {
-//        int randDest = 0;
-//        double randNumber = (double) rand() / RAND_MAX;
-//        std::cout << randNumber << std::endl;
-//        for (int i = 0; i < dests.size(); i++)
-//        {
-//            if (randNumber < Dest::SumProbability(GetDestination(), i))
-//            {
-//                std::cout << randNumber << " " << Dest::SumProbability(GetDestination(), i) << " "  << i << std::endl;
-//                randDest = i;
-//                break;
-//            }
-//            //zle cso xD
-//
-//        }
-//        std::cout << "jesli wyzej nie bylo dlugiego outputu to co jest nie tal" << std::endl;
-//        SetDestination(randDest);
-//    }
-//}
-
 void Agent::ChangeDest(const std::vector<Dest>& dests)
 {
     if (Distance2(GetCenterPosition(), dests[GetDestination()].GetCenterPosition()) < pow(GetSpeed(), 2))
     {
         int randDest = 0;
         double randNumber = (double)rand() / RAND_MAX;
-        //std::cout << randNumber << std::endl;
         for (int i = 0; i < dests.size(); i++)
         {
             randNumber -= Dest::markov[GetDestination()][i];
             if (randNumber < 0)
             {
-                //std::cout << randNumber << " " << Dest::SumProbability(GetDestination(), i) << " " << i << std::endl;
                 randDest = i;
                 break;
             }
-            //zle cso xD
 
         }
-        //std::cout << "jesli wyzej nie bylo dlugiego outputu to co jest nie tal" << std::endl;
         SetDestination(randDest);
     }
 }
@@ -97,7 +65,7 @@ void Agent::ChangeDest(const std::vector<Dest>& dests)
 bool Agent::canNearestTiles(Tile tile, const std::vector<Dest>& dests) const
 {
     float dist2 = Distance2(GetCenterPosition(), tile.GetCenterPosition());
-    if((tile.getFillColor() == Brown || tile.getFillColor() == Grey) && dist2 < pow(10 * Tile::sHeight,2) &&
+    if(((tile.state == dirt && tile.GetGrassHeight() < 2)|| tile.state == pavement) && dist2 < pow(10 * Tile::sHeight,2) &&
         IsCloser(tile.GetCenterPosition(), GetCenterPosition(), dests[GetDestination()].GetCenterPosition()))
         return 1;
     else

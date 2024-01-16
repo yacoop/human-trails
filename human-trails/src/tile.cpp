@@ -25,18 +25,6 @@ Tile::Tile(float x = 0, float y = 0, State state = dirt) :
 	}
 }
 
-//Tile::~Tile()
-//{
-//    sTileCount--;
-//}
-//
-//Tile::Tile(Tile const& tile) :
-//    sf::RectangleShape(tile), mGrassHeight(tile.mGrassHeight)
-//{
-//    sTileCopied++;
-//	sTileCount++;
-//}
-
 sf::Vector2f Tile::GetCenterPosition() const{
     return getPosition() + getSize() * .5f;
 }
@@ -57,6 +45,7 @@ void Tile::Grow() {
 
 void Tile::Stomp() {
     SetGrassHeight(GetGrassHeight() * mLambda);
+    beenThere++;
 }
 
 

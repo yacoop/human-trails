@@ -5,18 +5,12 @@
 #include "common.h"
 
 
-constexpr auto AGENTS_COUNT = 100;
-
 class Agent : public sf::CircleShape {
 
 
 public:
     std::vector<Tile> mNearestTiles;
-    Agent();
-    //Agent(float speed, float angle,
-    //    float r, sf::Color color);
-    //~Agent();
-    //Agent(Agent const& agent);
+    Agent(sf::Vector2f pos, int destination);
 
     sf::Vector2f GetCenterPosition() const;
 

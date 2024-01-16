@@ -58,13 +58,49 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="src\map.png">
+    <Image Include="src\maps\realobst.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="src\map0.png">
+    <Image Include="src\maps\real.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="src\map1.png">
+    <Image Include="src\map1-3dsada.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\maps\empty.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\maps\roads.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\maps\realmyobst.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\maps\idea1obst.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\maps\idea2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\maps\idea1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\maps\realmyobst2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\maps\realmyobst3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\maps\realmyobstfill.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\maps\ideaobstfill.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\maps\ideasimilar.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\maps\ideabest.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

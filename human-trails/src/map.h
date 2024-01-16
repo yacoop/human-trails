@@ -30,6 +30,9 @@ public:
 	static const int sDestSize = 6;
 	static const int sAgentSize = 100;
 
+	std::vector<Tile> mTiles;
+
+
 private:
 	void SetDirection(Agent& agent);
 	void MapInit(int width, int height);
@@ -38,7 +41,8 @@ private:
 	void AgentInit(int size);
 
 private:
-	std::vector<Tile> mTiles;
 	std::vector<Dest> mDests;
 	std::vector<Agent> mAgents;
+	int searchDist = 10;
+	std::string MAP_PATH = GetPath("maps/realmyobst.png");
 };
